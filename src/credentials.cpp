@@ -26,6 +26,8 @@ Credentials::Credentials(credentials_t &s)
 
 void Credentials::begin(char *ssid, char *password)
 {
+  Serial.println("Credential Server is Starting...");
+  WiFi.disconnect();
 
   WiFi.softAP(ssid, password);
 
@@ -38,6 +40,10 @@ void Credentials::begin(char *ssid, char *password)
   {
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
+  }
+  else
+  {
+    Serial.println("Credential Server is Working!");
   }
 
   // Send web page with input fields to client
@@ -75,8 +81,7 @@ void Credentials::begin(char *ssid, char *password)
 
                         credentialModel->CLIENT_SETUP_DONE = true;
 
-                        request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>Door Bot: Credentials Applied!</h1></div></body></html>");
-                      });
+                        request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>Door Bot: Credentials Applied!</h1></div></body></html>"); });
   credentialServer.onNotFound(notFoundCredentials);
   credentialServer.begin();
 }
@@ -86,4 +91,5 @@ void Credentials::destroy()
   delay(2000);
   WiFi.disconnect();
   credentialServer.end();
+  Serial.println("Credential Server Destroyed!");
 }

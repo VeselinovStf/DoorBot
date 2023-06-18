@@ -6,6 +6,15 @@
 #include "settings_html_templates.h"
 #include <SPIFFS.h>
 
+#include "freertos/FreeRTOS.h"
+#include "esp_wifi.h"
+#include "esp_wifi_types.h"
+#include "esp_system.h"
+#include "esp_event.h"
+#include "esp_event_loop.h"
+#include "nvs_flash.h"
+#include "mac_sniffer.h"
+
 const int max_mac_filtering = 20;
 
 SettingsHTMLTemplate settingHTMLTemplate;
@@ -26,12 +35,32 @@ Setting::Setting(setting_t &s)
 
 void Setting::begin(const char *ssid, const char *password)
 {
+  WiFi.disconnect();
+  Serial.println("Settings Server is Starting...");
+
+  wifi_country_t wifi_country = {.cc = "CN", .schan = 1, .nchan = 13};
+  wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+  ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+  ESP_ERROR_CHECK(esp_wifi_set_country(&wifi_country)); /* set country for channel range [1, 13] */
+  ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+  ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+  ESP_ERROR_CHECK(esp_wifi_start());
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   if (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
-    Serial.println("WiFi Failed!");
-    return;
+    Serial.println("Settings Server WiFi Failed!");
+
+    while (WiFi.status() != WL_CONNECTED)
+    {
+      Serial.println("Cant connect Settings Server!");
+      delay(500);
+    }
+  }
+  else
+  {
+    Serial.println("Settings Server Working!");
   }
 
   // Initialize SPIFFS
@@ -39,6 +68,10 @@ void Setting::begin(const char *ssid, const char *password)
   {
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
+  }
+  else
+  {
+    Serial.println("Settings server Pages are served!");
   }
 
   Serial.println();
@@ -154,6 +187,9 @@ void Setting::begin(const char *ssid, const char *password)
 void Setting::destroy()
 {
   delay(2000);
-  WiFi.disconnect();
+  ESP_ERROR_CHECK(esp_wifi_set_promiscuous(false)); // set as 'false' the promiscuous mode
+  ESP_ERROR_CHECK(esp_wifi_stop());                 // it stop soft-AP and free soft-AP control block
+  ESP_ERROR_CHECK(esp_wifi_deinit());               // free all resource allocated in esp_wifi_init() and stop WiFi task
   settingsServer.end();
+  Serial.println("Settings Server Destroyed!");
 }
