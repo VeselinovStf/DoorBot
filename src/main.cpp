@@ -31,7 +31,11 @@ void setup()
   botCredentialsServer.begin(INITIAL_CREDENTIAL_CLIENT_SSID, INITIAL_CREDENTIAL_CLIENT_PASSWORD);
 }
 
-#define HALL_SENSOR_UP_LIMIT 20
+#define HALL_SENSOR_UP_LIMIT 10
+#define HALL_SENSOR_TRESHHOLD_REPEAT 15
+#define HALL_SENSOR_TRESHHOLD_MAX_REPEAT 3
+#define HALL_SENSOR_DELAY_REPEAT 15
+
 #define BUZZER_PIN 32
 #define NOTIFICATIONS_SEND_DELAY 10000
 #define MAC_FILTERING_DELAY 10000
@@ -79,7 +83,7 @@ void loop()
       if (botSettings.STATION_ALARM)
       {
         // Open magnetic trigger
-        if (!checkMagneticSensor(HALL_SENSOR_UP_LIMIT))
+        if (!checkMagneticSensor(HALL_SENSOR_UP_LIMIT,HALL_SENSOR_TRESHHOLD_REPEAT,HALL_SENSOR_DELAY_REPEAT,HALL_SENSOR_TRESHHOLD_MAX_REPEAT))
         {
 
           if (botSettings.MAC_FILTERING)
@@ -92,7 +96,7 @@ void loop()
             if (!initiateMacSniffer)
             {
               macSniffer.begin();
-              // initiateMacSniffer = true;
+              initiateMacSniffer = true;
             }
             else
             {

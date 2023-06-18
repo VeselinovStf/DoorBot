@@ -28,7 +28,7 @@ void Credentials::begin(char *ssid, char *password)
 {
   Serial.println("Credential Server is Starting...");
   WiFi.disconnect();
-  
+
   WiFi.softAP(ssid, password);
 
   IPAddress IP = WiFi.softAPIP();
@@ -40,7 +40,9 @@ void Credentials::begin(char *ssid, char *password)
   {
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
-  }else{
+  }
+  else
+  {
     Serial.println("Credential Server is Working!");
   }
 

@@ -40,6 +40,10 @@ void MacSniffer::wifi_sniffer_init(void)
 void MacSniffer::wifi_sniffer_re_init(void)
 {
     wifi_country_t wifi_country = {.cc = "CN", .schan = 1, .nchan = 13};
+
+    nvs_flash_init();
+    tcpip_adapter_init();
+    //ESP_ERROR_CHECK(esp_event_loop_init(MacSniffer::event_handler, NULL));
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
     ESP_ERROR_CHECK(esp_wifi_set_country(&wifi_country)); /* set country for channel range [1, 13] */
@@ -47,6 +51,7 @@ void MacSniffer::wifi_sniffer_re_init(void)
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_NULL));
     ESP_ERROR_CHECK(esp_wifi_start());
     esp_wifi_set_promiscuous(true);
+    esp_wifi_set_promiscuous_rx_cb(&wifi_sniffer_packet_handler);
 }
 
 void MacSniffer::wifi_sniffer_packet_handler(void *buff, wifi_promiscuous_pkt_type_t type)
@@ -134,10 +139,9 @@ void MacSniffer::reinit()
 void MacSniffer::destroy()
 {
     foundDevice = false;
-    esp_wifi_set_promiscuous(false);
-    WiFi.disconnect();
-    esp_wifi_disconnect();
-    ESP_ERROR_CHECK(esp_wifi_stop());
+    ESP_ERROR_CHECK(esp_wifi_set_promiscuous(false)); // set as 'false' the promiscuous mode
+    ESP_ERROR_CHECK(esp_wifi_stop());                 // it stop soft-AP and free soft-AP control block
+    ESP_ERROR_CHECK(esp_wifi_deinit());               // free all resource allocated in esp_wifi_init() and stop WiFi task
     delay(2000);
     Serial.println("Destroying Mac Sniff!!");
 }

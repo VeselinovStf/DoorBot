@@ -1,6 +1,6 @@
 #ifndef MAGNETIC_SENSOR_H
 #define MAGNETIC_SENSOR_H
 
-bool checkMagneticSensor(int HALL_SENSOR_UP_LIMIT);
+bool checkMagneticSensor(int HALL_SENSOR_UP_LIMIT, int UPPER_LIMIT_TRESHHOLD, int DELAY,int HALL_SENSOR_TRESHHOLD_MAX_REPEAT);
 
 #endif
