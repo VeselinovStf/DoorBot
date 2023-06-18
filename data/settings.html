@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>The Door v1.0.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        input[type=text],
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button {
+            margin: 0 auto;
+            display: inline;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn {
+
+            margin: 0 auto;
+            display: inline;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        div {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        ul li {
+            background: #cce5ff;
+            color: darkblue;
+            margin: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        #candidate {
+            box-sizing: border-box;
+        }
+    </style>
+
+    <script>
+        function addItem() {
+            var a = document.getElementById("list");
+            var candidate = document.getElementById("candidate");
+            var li = document.createElement("li");
+            li.setAttribute('id', candidate.value);
+            var input = document.createElement("input");
+            var totalLis = a.getElementsByTagName('li').length + 1;
+            input.setAttribute('name', 'MAC_' + totalLis);
+            input.setAttribute('value', candidate.value);
+            input.setAttribute('readonly', null);
+            input.style.outline = 'none';
+            input.style.border = 'none';
+            input.style.background = 'none';
+            li.appendChild(input);
+            a.appendChild(li);
+        }
+
+        // Creating a function to remove item from list
+        function removeItem() {
+
+            // Declaring a variable to get select element
+            var a = document.getElementById("list");
+            var candidate = document.getElementById("candidate");
+            var item = document.getElementById(candidate.value);
+            a.removeChild(item);
+        }
+    </script>
+</head>
+
+<body class="center">
+    <h1>The Door Settings</h1>
+    <form action="/get">
+        <div>
+            <div>
+                <h4>Station Alarm</h4>
+                <input id="stationAlarmInput" type="hidden" name="stationAlarm">
+                <h4 id="stationAlarmState"></h4>
+                <p id="startStationAlarm" onclick="startStationAlarm()" class="btn">Start Alarm</p>
+                <p id="stopStationAlarm" onclick="stopStationAlarm()" class="btn">Stop Alarm</p>
+            </div>
+
+            <div>
+                <h4>Detection MAC Addr Filter List</h4>
+                <input id="filteringInput" type="hidden" name="filtering">
+                <p id="startFiltering" onclick="startFiltering()" class="btn">Start Filtering</p>
+                <p id="stopFiltering" onclick="stopFiltering()" class="btn">Stop Filtering</p>
+            </div>
+            <div id="filtering">
+                <ul id="list" name="macs"></ul>
+
+                <div>
+                    <input type="text" id="candidate" />
+                </div>
+                <div>
+                    <p class="btn" onclick="addItem()">
+                        Add item</p>
+                    <p class="btn" onclick="removeItem()">
+                        Remove item</p>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <h4>Notifications</h4>
+                    <p id="startNotifications" onclick="startNotifications()" class="btn">Start Notifications</p>
+                    <p id="stopNotifications" onclick="stopNotifications()" class="btn">Stop Notifications</p>
+                </div>
+                <div id="notifications">
+                    <input id="notificationsInput" type="hidden" name="notifications">
+                    <form action="/get">
+                        <label for="ssid">SSID</label>
+                        <input id="ssid" type="text" name="ssidInput">
+                        <label for="password">PASSWORD</label>
+                        <input id="password" type="text" name="wifiPasswordInput">
+                        <label for="api_key">API_KEY</label>
+                        <input id="api_key" type="text" name="apiKeyInput">
+                        <label for="id">ID</label>
+                        <input id="id" type="text" name="idInput">
+
+                </div>
+            </div>
+            <input type="submit" value="Submit">
+    </form>
+    <script>
+        var filtering = false;
+        var filteringArea = document.getElementById("filtering");
+        var filteringInput = document.getElementById('filteringInput');
+
+        var notifications = false;
+        var notificationsArea = document.getElementById("notifications");
+        var notificationsInput = document.getElementById('notificationsInput');
+
+        var stationAlarm = true;
+        var stationAlarmMessage = document.getElementById("stationAlarmState");
+        var stationAlarmInput = document.getElementById('stationAlarmInput');
+
+        function applyFiltering() {
+            if (!filtering) {
+                filteringArea.style.display = 'none';
+                filteringInput.setAttribute('value', 0);
+            } else {
+                filteringArea.style.display = 'block';
+                filteringInput.setAttribute('value', 1);
+            }
+        }
+
+        function applyNotifications() {
+            if (!notifications) {
+                notificationsArea.style.display = 'none';
+                notificationsInput.setAttribute('value', 0);
+            } else {
+                notificationsArea.style.display = 'block';
+                notificationsInput.setAttribute('value', 1);
+            }
+        }
+
+        function changeStationAlarmMessage() {
+            if (!stationAlarm) {
+                stationAlarmMessage.innerText = 'OFF';
+                stationAlarmInput.setAttribute('value', 0);
+            } else {
+                stationAlarmMessage.innerText = 'ON';
+                stationAlarmInput.setAttribute('value', 1);
+            }
+        }
+
+        applyFiltering();
+        function startFiltering() {
+            filtering = true;
+            applyFiltering();
+        }
+
+        function stopFiltering() {
+            filtering = false;
+            applyFiltering();
+        }
+
+        applyNotifications();
+        function startNotifications() {
+            notifications = true;
+            applyNotifications();
+        }
+
+        function stopNotifications() {
+            notifications = false;
+            applyNotifications();
+        }
+
+        changeStationAlarmMessage();
+        function startStationAlarm() {
+            stationAlarm = true;
+            changeStationAlarmMessage();
+        }
+
+        function stopStationAlarm() {
+            stationAlarm = false;
+            changeStationAlarmMessage();
+        }
+    </script>
+</body>
+
+</html>

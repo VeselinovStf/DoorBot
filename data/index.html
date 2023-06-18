@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Door Bot v1.0.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        input[type=text],
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button {
+            margin: 0 auto;
+            display: inline;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn {
+
+            margin: 0 auto;
+            display: inline;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        div {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        ul li {
+            background: #cce5ff;
+            color: darkblue;
+            margin: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        #candidate {
+            box-sizing: border-box;
+        }
+    </style>
+
+
+</head>
+
+<body class="center">
+    <h1>Door Bot Settings</h1>
+    <form action="/get">
+        <div>
+            <div>
+                <div id="notifications">
+                    <input id="notificationsInput" type="hidden" name="notifications">
+                    <form action="/get">
+                        <label for="ssid">SSID</label>
+                        <input id="ssid" type="text" name="ssidInput">
+                        <label for="password">PASSWORD</label>
+                        <input id="password" type="text" name="wifiPasswordInput">
+                </div>
+            </div>
+            <input type="submit" value="Submit">
+    </form>
+</body>
+
+</html>
