@@ -6,13 +6,13 @@
 class TelegramBOT
 {
 public:
-    TelegramBOT(char* id,char* api_key, char* wifi_ssid, char* wifi_password);
+    TelegramBOT(const char* id,const char* api_key,const char* wifi_ssid,const char* wifi_password);
     void begin(char* message);
     void destroy();
 private:
-    char* _id;
-    char* _api_key;
-    char* _wifi_ssid;
-    char* _wifi_password;
+    const char* _id;
+    const char* _api_key;
+    const char* _wifi_ssid;
+    const char* _wifi_password;
 };
 #endif

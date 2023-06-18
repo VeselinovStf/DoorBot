@@ -5,7 +5,7 @@
 
 WiFiClientSecure client;
 
-TelegramBOT::TelegramBOT(char *id, char *api_key, char *wifi_ssid, char *wifi_password)
+TelegramBOT::TelegramBOT(const char* id,const char* api_key,const char* wifi_ssid,const char* wifi_password)
 {
     _id = id;
     _api_key = api_key;

@@ -7,6 +7,7 @@
 #include "settings_html_templates.h"
 
 #include "magnetic_sensor.h"
+#include "telegram_bot.h"
 
 credentials_t botCredentials;
 Credentials botCredentialsServer(botCredentials);
@@ -28,6 +29,7 @@ void setup()
 
 #define HALL_SENSOR_UP_LIMIT 20
 #define BUZZER_PIN 32
+#define NOTIFICATIONS_SEND_DELAY 10000
 
 bool destroyBotCredentialServer = false;
 bool initiateSettingsServer = false;
@@ -48,13 +50,49 @@ void loop()
     }
     else
     {
-      if (!initiateSettingsServer)// Replace with Singleton!
+      if (!initiateSettingsServer) // Replace with Singleton!
       {
         botSettingsServer.begin(botCredentials.INPUT_SSID.c_str(), botCredentials.INPUT_PASSWORD.c_str());
         initiateSettingsServer = true;
       }
 
-      checkMagneticSensor(botSettings.STATION_ALARM, isBuzzerOn, BUZZER_PIN, HALL_SENSOR_UP_LIMIT);
+      if (botSettings.STATION_ALARM)
+      {
+        // Open magnetic trigger
+        if (!checkMagneticSensor(HALL_SENSOR_UP_LIMIT))
+        {
+          // Buzzer
+          if (isBuzzerOn)
+          {
+            digitalWrite(BUZZER_PIN, HIGH);
+          }
+
+          // Messages
+          if (botSettings.NOTIFICATIONS)
+          {
+            TelegramBOT bot = TelegramBOT(botSettings.INPUT_ID.c_str(), botSettings.INPUT_API_KEY.c_str(), botSettings.INPUT_SSID.c_str(), botSettings.INPUT_PASSWORD.c_str());
+            delay(1000);
+            
+            bot.begin("Door is Open: !!!");
+            bot.destroy();
+
+            // Delay for the next notification
+            delay(NOTIFICATIONS_SEND_DELAY);
+
+            initiateSettingsServer = false;
+          }
+        }
+      }
+      else
+      {
+        // Close magnetic trigger
+
+        // Buzzer
+        if (isBuzzerOn)
+        {
+          digitalWrite(BUZZER_PIN, LOW);
+        }
+      }
     }
   }
 }
