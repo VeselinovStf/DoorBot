@@ -21,7 +21,7 @@ SettingsHTMLTemplate settingHTMLTemplate;
 
 void notFoundSettings(AsyncWebServerRequest *request)
 {
-  request->send(404, "text/plain", "Not found");
+   request->send(SPIFFS, "/not-found.html", "text/html");
 }
 
 AsyncWebServer settingsServer(80);
@@ -81,6 +81,9 @@ void Setting::begin(const char *ssid, const char *password)
   // Send web page with input fields to client
   settingsServer.on("/", HTTP_GET, [&](AsyncWebServerRequest *request)
                     { request->send(SPIFFS, "/settings.html", "text/html"); });
+
+  settingsServer.on("/magnet", HTTP_GET, [&](AsyncWebServerRequest *request)
+                    { request->send(SPIFFS, "/magnetic.html", "text/html"); });
 
   settingsServer.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request)
                     { request->send(SPIFFS, "/bootstrap.min.css", "text/css"); });
@@ -176,10 +179,11 @@ void Setting::begin(const char *ssid, const char *password)
                 }
               }
 
-              request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>The Door Settings</h1><div><h4>Station Alarm: " + String(settingModel->STATION_ALARM) + "</h4><h4>MAC Addr Filter: " + String(settingModel->MAC_FILTERING) + "</h4><h4>Notifications: " + String(settingModel->NOTIFICATIONS) + "</h4></div></body></html>");
+              request->send(SPIFFS,"/change-success.html", "text/html");
   
              
               settingModel->CLIENT_SETUP_DONE = true; });
+
   settingsServer.onNotFound(notFoundSettings);
   settingsServer.begin();
 }
