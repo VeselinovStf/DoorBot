@@ -37,8 +37,9 @@ void setup()
 #define HALL_SENSOR_DELAY_REPEAT 15
 
 #define BUZZER_PIN 32
-#define NOTIFICATIONS_SEND_DELAY 10000
+#define NOTIFICATIONS_SEND_DELAY 1000
 #define MAC_FILTERING_DELAY 10000
+#define MAC_SNIFF_CONFIRM_REPEAT_TIMES 3 // Total time/ms = MAC_FILTERING_DELAY * MAC_SNIFF_CONFIRM_REPEAT_TIMES - Scan times for each with length MAC_FILTERING_DELAY
 
 bool destroyBotCredentialServer = false;
 bool initiateSettingsServer = false;
@@ -83,7 +84,7 @@ void loop()
       if (botSettings.STATION_ALARM)
       {
         // Open magnetic trigger
-        if (!checkMagneticSensor(HALL_SENSOR_UP_LIMIT,HALL_SENSOR_TRESHHOLD_REPEAT,HALL_SENSOR_DELAY_REPEAT,HALL_SENSOR_TRESHHOLD_MAX_REPEAT))
+        if (!checkMagneticSensor(HALL_SENSOR_UP_LIMIT, HALL_SENSOR_TRESHHOLD_REPEAT, HALL_SENSOR_DELAY_REPEAT, HALL_SENSOR_TRESHHOLD_MAX_REPEAT))
         {
 
           if (botSettings.MAC_FILTERING)
@@ -105,13 +106,27 @@ void loop()
 
             long mac_snifer_start_time = millis();
             long mac_sniffer_end_time = mac_snifer_start_time;
-            while ((mac_sniffer_end_time - mac_snifer_start_time) <= MAC_FILTERING_DELAY) // do this loop for up to 1000mS
+            int macSniffFoundRepeatCount = 0;
+
+            while (macSniffFoundRepeatCount < MAC_SNIFF_CONFIRM_REPEAT_TIMES)
             {
-              mac_sniffer_end_time = millis();
-              if (macSniffer.foundDevice)
+              bool b = false;
+              while ((mac_sniffer_end_time - mac_snifer_start_time) <= MAC_FILTERING_DELAY) // do this loop for up to 1000mS
+              {
+                mac_sniffer_end_time = millis();
+                if (macSniffer.foundDevice)
+                {
+                  b = true;
+                  break;
+                }
+              }
+
+              if (b)
               {
                 break;
               }
+
+              macSniffFoundRepeatCount++;
             }
 
             // code here
