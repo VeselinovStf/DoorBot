@@ -5,6 +5,7 @@
     <title>Door Bot v1.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="back.css">
     <script src="bootstrap.min.js"></script>
 
     <script>
@@ -37,82 +38,124 @@
     </script>
 </head>
 
-<body class="container justify-content-center text-center">
-    <div style="margin-top:5%" class="row justify-content-center">
-        <h1 class="j">Door Bot</h1>
-    </div>
-    <form action="/get">
-        <div>
-            <div class="form-group card">
-                <h4>Door Bot Detector</h4>
+<body>
+    <div class="container" style="margin-top:5%;margin-bottom:5%">
+        <div class="credentials d-flex justify-content-center h-100 text-center">
+            <div class="card" style="background-color: rgba(0, 0, 0, 0.5)">
+                <div class="card-header">
+                    <h3 style="color: white;">Door Bot v1.1</h3>
+                </div>
                 <div class="card-body">
-                    <input id="stationAlarmInput" type="hidden" name="stationAlarm">
-                    <h4 id="stationAlarmState"></h4>
-                    <p id="startStationAlarm" onclick="startStationAlarm()" class="btn btn-primary">Enable</p>
-                    <p id="stopStationAlarm" onclick="stopStationAlarm()" class="btn btn-danger">Disable</p>
-                </div>
-
-            </div>
-
-            <div class="form-group card">
-                <h4>Sound Alarm</h4>
-                <div class="card-body"><input id="stationSoundInput" type="hidden" name="stationSound">
-                    <h4 id="stationSoundState"></h4>
-                    <p id="startSoundAlarm" onclick="startSoundAlarm()" class="btn btn-primary">Start Sound Alarm</p>
-                    <p id="stopSoundAlarm" onclick="stopSoundAlarm()" class="btn btn-danger">Stop Sound Alarm</p>
-                </div>
-
-            </div>
-
-            <div class="form-group card">
-                <h4>Detection MAC Addr Filter List</h4>
-                <div class="card-body"> <input id="filteringInput" type="hidden" name="filtering">
-                    <p id="startFiltering" onclick="startFiltering()" class="btn btn-primary">Start Filtering</p>
-                    <p id="stopFiltering" onclick="stopFiltering()" class="btn btn-danger">Stop Filtering</p>
-                </div>
-
-            </div>
-            <div id="filtering" class="form-group card">
-                <ul id="list" name="macs"></ul>
-
-                <div class="form-group">
-                    <input type="text" id="candidate" />
-                </div>
-                <div class="form-group">
-                    <p class="btn btn-primary" onclick="addItem()">
-                        Add item</p>
-                    <p class="btn btn-warning" onclick="removeItem()">
-                        Remove item</p>
-                </div>
-            </div>
-            <div class="form-group card">
-                <div>
-                    <h4>Notifications</h4>
-                    <div class="card-body">
-                        <p id="startNotifications" onclick="startNotifications()" class="btn btn-primary">Start
-                            Notifications</p>
-                        <p id="stopNotifications" onclick="stopNotifications()" class="btn btn-danger">Stop
-                            Notifications
-                        </p>
-                    </div>
-
-                </div>
-                <div id="notifications">
-                    <input id="notificationsInput" type="hidden" name="notifications">
                     <form action="/get">
-                        <label for="ssid">SSID</label>
-                        <input id="ssid" type="text" name="ssidInput">
-                        <label for="password">PASSWORD</label>
-                        <input id="password" type="text" name="wifiPasswordInput">
-                        <label for="api_key">API_KEY</label>
-                        <input id="api_key" type="text" name="apiKeyInput">
-                        <label for="id">ID</label>
-                        <input id="id" type="text" name="idInput">
+                        <div>
+                            <div class="form-group card">
 
+                                <div class="card-body">
+                                    <h4>Door Bot Detector</h4>
+                                    <input id="stationAlarmInput" type="hidden" name="stationAlarm">
+                                    <h4 id="stationAlarmState"></h4>
+                                    <p id="startStationAlarm" onclick="startStationAlarm()" class="btn btn-primary">
+                                        Enable</p>
+                                    <p id="stopStationAlarm" onclick="stopStationAlarm()" class="btn btn-danger">Disable
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group card">
+
+                                <div class="card-body"><input id="stationSoundInput" type="hidden" name="stationSound">
+                                    <h4>Sound Alarm</h4>
+                                    <h4 id="stationSoundState"></h4>
+                                    <p id="startSoundAlarm" onclick="startSoundAlarm()" class="btn btn-primary">Start
+                                        Sound Alarm</p>
+                                    <p id="stopSoundAlarm" onclick="stopSoundAlarm()" class="btn btn-danger">Stop Sound
+                                        Alarm</p>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group card">
+
+                                <div class="card-body"> <input id="filteringInput" type="hidden" name="filtering">
+                                    <h4>Detection MAC Addr Filter List</h4>
+                                    <p id="startFiltering" onclick="startFiltering()" class="btn btn-primary">Start
+                                        Filtering</p>
+                                    <p id="stopFiltering" onclick="stopFiltering()" class="btn btn-danger">Stop
+                                        Filtering</p>
+                                </div>
+
+                            </div>
+                            <div id="filtering" class="form-group card">
+                                <ul id="list" name="macs"></ul>
+
+                                <div class="form-group">
+                                    <input type="text" id="candidate" />
+                                </div>
+                                <div class="form-group">
+                                    <p class="btn btn-primary" onclick="addItem()">
+                                        Add item</p>
+                                    <p class="btn btn-warning" onclick="removeItem()">
+                                        Remove item</p>
+                                </div>
+                            </div>
+                            <div class="card">
+
+
+                                <div class="card-body">
+                                    <h4>Notifications</h4>
+                                    <p id="startNotifications" onclick="startNotifications()" class="btn btn-primary">
+                                        Start
+                                        Notifications</p>
+                                    <p id="stopNotifications" onclick="stopNotifications()" class="btn btn-danger">
+                                        Stop
+                                        Notifications
+                                    </p>
+                                </div>
+
+                                <div class="card-body">
+
+                                    <div id="notifications" class="justify-content-right">
+                                        <input id="notificationsInput" type="hidden" name="notifications">
+                                        <form action="/get">
+                                            <div class="form-group"><label for="ssid">SSID</label>
+                                                <input class="form-control" id="ssid" type="text" name="ssidInput">
+                                            </div>
+                                            <div class="form-group"> <label for="password">PASSWORD</label>
+                                                <input class="form-control" id="password" type="text"
+                                                    name="wifiPasswordInput">
+                                            </div>
+                                            <div class="form-group"> <label for="api_key">API_KEY</label>
+                                                <input class="form-control" id="api_key" type="text" name="apiKeyInput">
+                                            </div>
+                                            <div class="form-group"> <label for="id">ID</label>
+                                                <input class="form-control" id="id" type="text" name="idInput">
+                                            </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="">
+                                    <input class="btn btn-primary" type="submit" value="Submit">
+                                </div>
+                                <div class="text-center">
+                                    <p><small style="color:white">©VeselinovStf</small></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
             </div>
-            <input class="btn btn-primary" type="submit" value="Submit">
-    </form>
+        </div>
+    </div>
+    <div class='box'>
+        <div class='wave -one'></div>
+        <div class='wave -two'></div>
+        <div class='wave -three'></div>
+    </div>
+
     <script>
         var filtering = false;
         var filteringArea = document.getElementById("filtering");

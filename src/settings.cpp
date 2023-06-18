@@ -49,11 +49,17 @@ void Setting::begin(const char *ssid, const char *password)
   settingsServer.on("/", HTTP_GET, [&](AsyncWebServerRequest *request)
                     { request->send(SPIFFS, "/settings.html", "text/html"); });
 
- settingsServer.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/bootstrap.min.css", "text/css"); });
+  settingsServer.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request)
+                    { request->send(SPIFFS, "/bootstrap.min.css", "text/css"); });
 
-   settingsServer.on("/bootstrap.min.js", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/bootstrap.min.js", "text/js"); });
+  settingsServer.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
+                    { request->send(SPIFFS, "/style.css", "text/css"); });
+
+  settingsServer.on("/back.css", HTTP_GET, [](AsyncWebServerRequest *request)
+                    { request->send(SPIFFS, "/back.css", "text/css"); });
+
+  settingsServer.on("/bootstrap.min.js", HTTP_GET, [](AsyncWebServerRequest *request)
+                    { request->send(SPIFFS, "/bootstrap.min.js", "text/js"); });
 
   // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
   settingsServer.on("/get", HTTP_GET, [&](AsyncWebServerRequest *request)
