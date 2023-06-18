@@ -4,28 +4,19 @@
 
 #pragma region DOOR_SENSOR
 
-void checkMagneticSensor(bool isAlarmOn, bool isBuzzerOn, int BUZZER_PIN, int HALL_SENSOR_UP_LIMIT)
+bool checkMagneticSensor(int HALL_SENSOR_UP_LIMIT)
 {
-  if (isAlarmOn)
+  int hallSensorValue = hallRead();
+
+  if (hallSensorValue >= HALL_SENSOR_UP_LIMIT)
   {
-    int hallSensorValue = hallRead();
-    int buzzerValue = 0;
-
-    if (hallSensorValue >= HALL_SENSOR_UP_LIMIT)
-    {
-      debugger(F("DOOR IS OPEN: "));
-      buzzerValue = 1;
-    }
-    else
-    {
-      debugger(F("DOOR IS CLOSED: "));
-      buzzerValue = 0;
-    }
-
-    if (isBuzzerOn)
-    {
-      digitalWrite(BUZZER_PIN, buzzerValue);
-    }
+    debugger(F("Far from magnet. "));
+    return false;
+  }
+  else
+  {
+    debugger(F("Close to magnet. "));
+    return true;
   }
 }
 
