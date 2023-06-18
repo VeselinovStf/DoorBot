@@ -26,12 +26,24 @@ Setting::Setting(setting_t &s)
 
 void Setting::begin(const char *ssid, const char *password)
 {
+  WiFi.disconnect();
+  Serial.println("Settings Server is Starting...");
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   if (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
-    Serial.println("WiFi Failed!");
-    return;
+    Serial.println("Settings Server WiFi Failed!");
+
+    while (WiFi.status() != WL_CONNECTED)
+    {
+      Serial.println("Cant connect Settings Server!");
+      delay(500);
+    }
+  }
+  else
+  {
+    Serial.println("Settings Server Working!");
   }
 
   // Initialize SPIFFS
@@ -39,6 +51,10 @@ void Setting::begin(const char *ssid, const char *password)
   {
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
+  }
+  else
+  {
+    Serial.println("Settings server Pages are served!");
   }
 
   Serial.println();
@@ -156,4 +172,5 @@ void Setting::destroy()
   delay(2000);
   WiFi.disconnect();
   settingsServer.end();
+  Serial.println("Settings Server Destroyed!");
 }

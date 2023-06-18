@@ -5,7 +5,7 @@
 
 WiFiClientSecure client;
 
-TelegramBOT::TelegramBOT(const char* id,const char* api_key,const char* wifi_ssid,const char* wifi_password)
+TelegramBOT::TelegramBOT(const char *id, const char *api_key, const char *wifi_ssid, const char *wifi_password)
 {
     _id = id;
     _api_key = api_key;
@@ -13,8 +13,11 @@ TelegramBOT::TelegramBOT(const char* id,const char* api_key,const char* wifi_ssi
     _wifi_password = wifi_password;
 }
 
-void TelegramBOT::begin(char* message)
+void TelegramBOT::begin(char *message)
 {
+    Serial.println("Telegram Bot initiating!");
+    WiFi.disconnect();
+
     UniversalTelegramBot bot(_api_key, client);
 
     // Attempt to connect to Wifi network:
@@ -27,9 +30,10 @@ void TelegramBOT::begin(char* message)
 
     while (WiFi.status() != WL_CONNECTED)
     {
-        Serial.print(".");
+        Serial.println("Cant connect Telegram Bot!");
         delay(500);
     }
+    
 
     Serial.println("");
     Serial.println("WiFi connected");
@@ -43,4 +47,5 @@ void TelegramBOT::destroy()
 {
     delay(2000);
     WiFi.disconnect();
+    Serial.println("Telegram Bot Destroyed!");
 };
