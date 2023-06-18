@@ -12,7 +12,7 @@ CredentialHTMLTemplate credentialHTMLTemplate;
 
 void notFoundCredentials(AsyncWebServerRequest *request)
 {
-  request->send(404, "text/plain", "Not found");
+     request->send(SPIFFS, "/not-found.html", "text/html");
 }
 
 AsyncWebServer credentialServer(80);
@@ -81,7 +81,8 @@ void Credentials::begin(char *ssid, char *password)
 
                         credentialModel->CLIENT_SETUP_DONE = true;
 
-                        request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>Door Bot: Credentials Applied!</h1></div></body></html>"); });
+                        request->send(SPIFFS, "/credential-applied.html", "text/html");
+                      });
   credentialServer.onNotFound(notFoundCredentials);
   credentialServer.begin();
 }
