@@ -2,92 +2,10 @@
 <html>
 
 <head>
-    <title>The Door v1.0.1</title>
+    <title>Door Bot v1.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .center {
-            margin: auto;
-            width: 50%;
-            padding: 10px;
-            text-align: center;
-        }
-
-        input[type=text],
-        select {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        input[type=submit] {
-            width: 100%;
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button {
-            margin: 0 auto;
-            display: inline;
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn {
-
-            margin: 0 auto;
-            display: inline;
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-
-        input[type=submit]:hover {
-            background-color: #45a049;
-        }
-
-        div {
-            border-radius: 5px;
-            background-color: #f2f2f2;
-            padding: 20px;
-        }
-
-        ul li {
-            background: #cce5ff;
-            color: darkblue;
-            margin: 5px;
-        }
-
-        ul {
-            list-style-type: none;
-        }
-
-        #candidate {
-            box-sizing: border-box;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <script src="bootstrap.min.js"></script>
 
     <script>
         function addItem() {
@@ -119,42 +37,65 @@
     </script>
 </head>
 
-<body class="center">
-    <h1>The Door Settings</h1>
+<body class="container justify-content-center text-center">
+    <div style="margin-top:5%" class="row justify-content-center">
+        <h1 class="j">Door Bot</h1>
+    </div>
     <form action="/get">
         <div>
-            <div>
-                <h4>Station Alarm</h4>
-                <input id="stationAlarmInput" type="hidden" name="stationAlarm">
-                <h4 id="stationAlarmState"></h4>
-                <p id="startStationAlarm" onclick="startStationAlarm()" class="btn">Start Alarm</p>
-                <p id="stopStationAlarm" onclick="stopStationAlarm()" class="btn">Stop Alarm</p>
+            <div class="form-group card">
+                <h4>Door Bot Detector</h4>
+                <div class="card-body">
+                    <input id="stationAlarmInput" type="hidden" name="stationAlarm">
+                    <h4 id="stationAlarmState"></h4>
+                    <p id="startStationAlarm" onclick="startStationAlarm()" class="btn btn-primary">Enable</p>
+                    <p id="stopStationAlarm" onclick="stopStationAlarm()" class="btn btn-danger">Disable</p>
+                </div>
+
             </div>
 
-            <div>
-                <h4>Detection MAC Addr Filter List</h4>
-                <input id="filteringInput" type="hidden" name="filtering">
-                <p id="startFiltering" onclick="startFiltering()" class="btn">Start Filtering</p>
-                <p id="stopFiltering" onclick="stopFiltering()" class="btn">Stop Filtering</p>
+            <div class="form-group card">
+                <h4>Sound Alarm</h4>
+                <div class="card-body"><input id="stationSoundInput" type="hidden" name="stationSound">
+                    <h4 id="stationSoundState"></h4>
+                    <p id="startSoundAlarm" onclick="startSoundAlarm()" class="btn btn-primary">Start Sound Alarm</p>
+                    <p id="stopSoundAlarm" onclick="stopSoundAlarm()" class="btn btn-danger">Stop Sound Alarm</p>
+                </div>
+
             </div>
-            <div id="filtering">
+
+            <div class="form-group card">
+                <h4>Detection MAC Addr Filter List</h4>
+                <div class="card-body"> <input id="filteringInput" type="hidden" name="filtering">
+                    <p id="startFiltering" onclick="startFiltering()" class="btn btn-primary">Start Filtering</p>
+                    <p id="stopFiltering" onclick="stopFiltering()" class="btn btn-danger">Stop Filtering</p>
+                </div>
+
+            </div>
+            <div id="filtering" class="form-group card">
                 <ul id="list" name="macs"></ul>
 
-                <div>
+                <div class="form-group">
                     <input type="text" id="candidate" />
                 </div>
-                <div>
-                    <p class="btn" onclick="addItem()">
+                <div class="form-group">
+                    <p class="btn btn-primary" onclick="addItem()">
                         Add item</p>
-                    <p class="btn" onclick="removeItem()">
+                    <p class="btn btn-warning" onclick="removeItem()">
                         Remove item</p>
                 </div>
             </div>
-            <div>
+            <div class="form-group card">
                 <div>
                     <h4>Notifications</h4>
-                    <p id="startNotifications" onclick="startNotifications()" class="btn">Start Notifications</p>
-                    <p id="stopNotifications" onclick="stopNotifications()" class="btn">Stop Notifications</p>
+                    <div class="card-body">
+                        <p id="startNotifications" onclick="startNotifications()" class="btn btn-primary">Start
+                            Notifications</p>
+                        <p id="stopNotifications" onclick="stopNotifications()" class="btn btn-danger">Stop
+                            Notifications
+                        </p>
+                    </div>
+
                 </div>
                 <div id="notifications">
                     <input id="notificationsInput" type="hidden" name="notifications">
@@ -170,7 +111,7 @@
 
                 </div>
             </div>
-            <input type="submit" value="Submit">
+            <input class="btn btn-primary" type="submit" value="Submit">
     </form>
     <script>
         var filtering = false;
@@ -184,6 +125,10 @@
         var stationAlarm = true;
         var stationAlarmMessage = document.getElementById("stationAlarmState");
         var stationAlarmInput = document.getElementById('stationAlarmInput');
+
+        var stationSound = true;
+        var stationSoundInput = document.getElementById('stationSoundInput');
+        var stationSoundMessage = document.getElementById("stationSoundState");
 
         function applyFiltering() {
             if (!filtering) {
@@ -212,6 +157,16 @@
             } else {
                 stationAlarmMessage.innerText = 'ON';
                 stationAlarmInput.setAttribute('value', 1);
+            }
+        }
+
+        function changeStationSoundMessage() {
+            if (!stationSound) {
+                stationSoundMessage.innerText = 'OFF';
+                stationSoundInput.setAttribute('value', 0);
+            } else {
+                stationSoundMessage.innerText = 'ON';
+                stationSoundInput.setAttribute('value', 1);
             }
         }
 
@@ -246,6 +201,17 @@
         function stopStationAlarm() {
             stationAlarm = false;
             changeStationAlarmMessage();
+        }
+
+        changeStationSoundMessage();
+        function startSoundAlarm() {
+            stationSound = true;
+            changeStationSoundMessage();
+        }
+
+        function stopSoundAlarm() {
+            stationSound = false;
+            changeStationSoundMessage();
         }
     </script>
 </body>

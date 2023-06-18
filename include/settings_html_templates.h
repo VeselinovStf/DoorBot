@@ -14,6 +14,7 @@ public:
     static const char *PARAM_STATION_ALARM;
     static const char *PARAM_FILTERING;
     static const char *PARAM_NOTIFICATIONS;
+    static const char *PARAM_STATION_SOUND_ALARM;
 };
 
 #endif

@@ -34,9 +34,6 @@ void setup()
 bool destroyBotCredentialServer = false;
 bool initiateSettingsServer = false;
 
-bool isAlarmOn = true;
-bool isBuzzerOn = false;
-
 void loop()
 {
   if (botCredentials.CLIENT_SETUP_DONE)
@@ -62,7 +59,7 @@ void loop()
         if (!checkMagneticSensor(HALL_SENSOR_UP_LIMIT))
         {
           // Buzzer
-          if (isBuzzerOn)
+          if (botSettings.STATION_SOUND)
           {
             digitalWrite(BUZZER_PIN, HIGH);
           }
@@ -88,7 +85,7 @@ void loop()
         // Close magnetic trigger
 
         // Buzzer
-        if (isBuzzerOn)
+        if (botSettings.STATION_SOUND)
         {
           digitalWrite(BUZZER_PIN, LOW);
         }

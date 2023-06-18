@@ -43,7 +43,13 @@ void Credentials::begin(char *ssid, char *password)
 
   // Send web page with input fields to client
   credentialServer.on("/", HTTP_GET, [&](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/index.html", "text/html"); });
+            { request->send(SPIFFS, "/credentials.html", "text/html"); });
+
+ credentialServer.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, "/bootstrap.min.css", "text/css"); });
+
+   credentialServer.on("/bootstrap.min.js", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, "/bootstrap.min.js", "text/js"); });
 
   // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
   credentialServer.on("/get", HTTP_GET, [&](AsyncWebServerRequest *request)
@@ -64,7 +70,7 @@ void Credentials::begin(char *ssid, char *password)
                  
                 credentialModel->CLIENT_SETUP_DONE = true; 
 
-              request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>The Door v1.0.1</title></head><body><div><h1>The Door Credentialss</h1><div><p>SSID: " + credentialModel->INPUT_SSID + "</p></div></div></body></html>");
+              request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>Door Bot: Credentials Applied!</h1></div></body></html>");
   
              
              

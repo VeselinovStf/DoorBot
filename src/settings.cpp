@@ -24,7 +24,7 @@ Setting::Setting(setting_t &s)
   settingModel = &s;
 }
 
-void Setting::begin(const char *ssid,const char *password)
+void Setting::begin(const char *ssid, const char *password)
 {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -45,14 +45,19 @@ void Setting::begin(const char *ssid,const char *password)
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-
   // Send web page with input fields to client
   settingsServer.on("/", HTTP_GET, [&](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/settings.html", "text/html"); });
+                    { request->send(SPIFFS, "/settings.html", "text/html"); });
+
+ settingsServer.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, "/bootstrap.min.css", "text/css"); });
+
+   settingsServer.on("/bootstrap.min.js", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, "/bootstrap.min.js", "text/js"); });
 
   // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
   settingsServer.on("/get", HTTP_GET, [&](AsyncWebServerRequest *request)
-            {
+                    {
               String inputMessage;
 
               // GET station alarm
@@ -66,6 +71,20 @@ void Setting::begin(const char *ssid,const char *password)
                 else
                 {
                   settingModel->STATION_ALARM = false;
+                }
+              }
+
+              // GET station alarm
+              if (request->hasParam(settingHTMLTemplate.PARAM_STATION_SOUND_ALARM))
+              {
+                inputMessage = request->getParam(settingHTMLTemplate.PARAM_STATION_SOUND_ALARM)->value();
+                if (inputMessage == "1")
+                {
+                  settingModel->STATION_SOUND = true;
+                }
+                else
+                {
+                  settingModel->STATION_SOUND = false;
                 }
               }
 
@@ -130,11 +149,10 @@ void Setting::begin(const char *ssid,const char *password)
                 }
               }
 
-              request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>The Door v1.0.1</title></head><body><div><h1>The Door Settings</h1><div><h4>Station Alarm: " + String(settingModel->STATION_ALARM) + "</h4><h4>MAC Addr Filter: " + String(settingModel->MAC_FILTERING) + "</h4><h4>Notifications: " + String(settingModel->NOTIFICATIONS) + "</h4><p>SSID: " + settingModel->INPUT_SSID + "</p><p>PASSWORD: " + settingModel->INPUT_PASSWORD + "</p><p>API_KEY: " + settingModel->INPUT_API_KEY + "</p><p>ID: " + settingModel->INPUT_ID + "</p></div></div></body></html>");
+              request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>The Door Settings</h1><div><h4>Station Alarm: " + String(settingModel->STATION_ALARM) + "</h4><h4>MAC Addr Filter: " + String(settingModel->MAC_FILTERING) + "</h4><h4>Notifications: " + String(settingModel->NOTIFICATIONS) + "</h4><p>SSID: " + settingModel->INPUT_SSID + "</p></div></body></html>");
   
              
-              settingModel->CLIENT_SETUP_DONE = true;
-            });
+              settingModel->CLIENT_SETUP_DONE = true; });
   settingsServer.onNotFound(notFoundSettings);
   settingsServer.begin();
 }
