@@ -38,7 +38,7 @@ bool accessPointAuthenticated = false;
 bool isAlarmOn = true;
 bool isBuzzerOn = false;
 
-WiFiServer server(PORT);
+WiFiServer server(80);
 
 #pragma endregion DEFINE
 
@@ -51,7 +51,7 @@ void setup()
     Serial.begin(115200);
   }
 
-  setupWIFI(accessPointAuthenticated, ssid, password, server);
+  setupWIFI(accessPointAuthenticated, ssid, password, &server);
 
   if (isBuzzerOn)
   {
@@ -61,6 +61,7 @@ void setup()
 
 #pragma endregion SETUP
 
+bool settingStatus = false;
 void loop()
 {
   WiFiClient client = server.available(); // listen for incoming clients
@@ -76,12 +77,18 @@ void loop()
     }
     else
     {
-      settingController(client, ssid, password, isAlarmOn, isBuzzerOn, BUZZER_PIN, HALL_SENSOR_UP_LIMIT);
+      if (!settingStatus)
+      {
+        settingController(&client, ssid, password, isAlarmOn, isBuzzerOn, BUZZER_PIN, HALL_SENSOR_UP_LIMIT, &settingStatus);
+      }
+      else
+      {
+        WiFi.disconnect();
+        debugger("WIFI Disconected: Authenticated");
 
-      WiFi.disconnect();
-
-      accessPointAuthenticated = true;
-      setupWIFI(accessPointAuthenticated, ssid, password, server);
+        accessPointAuthenticated = true;
+        setupWIFI(accessPointAuthenticated, ssid, password, &server);
+      }
     }
 
     // Client is not connected!

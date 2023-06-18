@@ -13,7 +13,7 @@
     - if accessPointAuthenticated is done, use provided SSID and PAsSW to connect to AP
     - else if accessPointAuthenticated is false, start AP mode for setting up the credentials
 */
-void setupWIFI(bool accessPointAuthenticated, char *ssid,  char* password,WiFiServer server)
+void setupWIFI(bool accessPointAuthenticated, char *ssid,  char* password, WiFiServer* server)
 {
     if (!accessPointAuthenticated)
     {
@@ -31,7 +31,7 @@ void setupWIFI(bool accessPointAuthenticated, char *ssid,  char* password,WiFiSe
         IPAddress myIP = WiFi.softAPIP();
         debugger("AP IP address: ");
         debugger(myIP.toString());
-        server.begin();
+        server->begin();
 
         debugger("Server started");
     }
@@ -53,7 +53,7 @@ void setupWIFI(bool accessPointAuthenticated, char *ssid,  char* password,WiFiSe
         debugger("IP address: ");
         debugger(myIP.toString());
 
-        server.begin(8088);
+        server->begin(8088);
 
         debugger("Server started: localhost:8088");
     }
@@ -63,20 +63,37 @@ void setupWIFI(bool accessPointAuthenticated, char *ssid,  char* password,WiFiSe
 
 #pragma region SETTING_HTTP_RESPONSES
 
-void accessPointService(String currentLine, char *ssid, char *password)
+bool accessPointService(String* currentLine, char *ssid, char *password)
 {
-    if (currentLine.indexOf("ssidInput") >= 0)
+    return ssidService(currentLine,ssid) && passwordService(currentLine,password);
+}
+
+bool ssidService(String* currentLine, char *ssid)
+{
+    if (currentLine->indexOf("ssidInput") >= 0)
     {
         debugger("SSID ..");
         ssid = "A1_41C2";
+
+        return true;
     }
 
-    if (currentLine.indexOf("wifiPasswordInput") >= 0)
+    return false;
+}
+
+bool passwordService(String* currentLine, char *password)
+{
+    if (currentLine->indexOf("wifiPasswordInput") >= 0)
     {
         debugger("Password ..");
         password = "48575443E694A49D";
+    
+        return true;
     }
+
+    return false;
 }
+
 
 #pragma endregion SETTING_HTTP_RESPONSES
 
@@ -85,41 +102,41 @@ void accessPointService(String currentLine, char *ssid, char *password)
 /*
   Settings page View
 */
-void settingsView(WiFiClient client)
+void settingsView(WiFiClient* client)
 {
-    client.println("HTTP/1.1 200 OK");
-    client.println("Content-type:text/html");
-    client.println();
+    client->println("HTTP/1.1 200 OK");
+    client->println("Content-type:text/html");
+    client->println();
 
     // MAIN CONTENT
-    client.print("<form action=\"/get\">");
+    client->print("<form action=\"/get\">");
 
-    client.print("<label for=\"ssid\">SSID</label>");
-    client.print("<input id=\"ssid\" type=\"text\" name=\"ssidInput\">");
-    client.print(" <label for=\"password\">PASSWORD</label>");
-    client.print(" <input id=\"password\" type=\"text\" name=\"wifiPasswordInput\">");
+    client->print("<label for=\"ssid\">SSID</label>");
+    client->print("<input id=\"ssid\" type=\"text\" name=\"ssidInput\">");
+    client->print(" <label for=\"password\">PASSWORD</label>");
+    client->print(" <input id=\"password\" type=\"text\" name=\"wifiPasswordInput\">");
 
-    client.print(" <input type=\"submit\" value=\"Submit\">");
+    client->print(" <input type=\"submit\" value=\"Submit\">");
 
-    client.print(" </form>");
+    client->print(" </form>");
 
     // The HTTP response ends with another blank line:
-    client.println();
+    client->println();
 }
 
 /*
   Settings page Controller
 */
-void settingController(WiFiClient client, char *ssid,  char* password,bool isAlarmOn,bool isBuzzerOn,int BUZZER_PIN, int HALL_SENSOR_UP_LIMIT )
+void settingController(WiFiClient* client, char *ssid,  char* password,bool isAlarmOn,bool isBuzzerOn,int BUZZER_PIN, int HALL_SENSOR_UP_LIMIT, bool* status )
 {
     String currentLine = ""; // make a String to hold incoming data from the client
-    while (client.connected())
+    while (client->connected())
     { // loop while the client's connected
         checkDoorSensor(isAlarmOn, isBuzzerOn, BUZZER_PIN, HALL_SENSOR_UP_LIMIT);
 
-        if (client.available())
+        if (client->available())
         {                           // if there's bytes to read from the client,
-            char c = client.read(); // read a byte, then
+            char c = client->read(); // read a byte, then
             Serial.write(c);        // print it out the serial monitor
             if (c == '\n')
             { // if the byte is a newline character
@@ -144,7 +161,7 @@ void settingController(WiFiClient client, char *ssid,  char* password,bool isAla
             }
 
             // HTTP RESPONSE MESSAGE CHECKS
-            accessPointService(currentLine,ssid,password);
+            *status = accessPointService(&currentLine,ssid,password);
         }
 
         // Client is not availible
