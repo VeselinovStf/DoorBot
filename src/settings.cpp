@@ -125,18 +125,6 @@ void Setting::begin(const char *ssid, const char *password)
                 {
                   settingModel->NOTIFICATIONS = true;
 
-                  // INPUT_SSID
-                  if (request->hasParam(settingHTMLTemplate.PARAM_SSID))
-                  {
-                    settingModel->INPUT_SSID = request->getParam(settingHTMLTemplate.PARAM_SSID)->value();
-                  }
-
-                  // INPUT_PASSWORD
-                  if (request->hasParam(settingHTMLTemplate.PARAM_WIFI_PASS))
-                  {
-                    settingModel->INPUT_PASSWORD = request->getParam(settingHTMLTemplate.PARAM_WIFI_PASS)->value();
-                  }
-
                   //
                   if (request->hasParam(settingHTMLTemplate.PARAM_API_KEY))
                   {
@@ -155,7 +143,7 @@ void Setting::begin(const char *ssid, const char *password)
                 }
               }
 
-              request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>The Door Settings</h1><div><h4>Station Alarm: " + String(settingModel->STATION_ALARM) + "</h4><h4>MAC Addr Filter: " + String(settingModel->MAC_FILTERING) + "</h4><h4>Notifications: " + String(settingModel->NOTIFICATIONS) + "</h4><p>SSID: " + settingModel->INPUT_SSID + "</p></div></body></html>");
+              request->send(200, "text/html", "<!DOCTYPE html><html ><head><title>Door Bot v1.0.1</title></head><body><div><h1>The Door Settings</h1><div><h4>Station Alarm: " + String(settingModel->STATION_ALARM) + "</h4><h4>MAC Addr Filter: " + String(settingModel->MAC_FILTERING) + "</h4><h4>Notifications: " + String(settingModel->NOTIFICATIONS) + "</h4></div></body></html>");
   
              
               settingModel->CLIENT_SETUP_DONE = true; });

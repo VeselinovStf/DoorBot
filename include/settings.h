@@ -5,8 +5,6 @@
 
 typedef struct
 {
-    String INPUT_SSID = "";
-    String INPUT_PASSWORD = "";
     String INPUT_API_KEY = "";
     String INPUT_ID = "";
     bool STATION_ALARM = false;

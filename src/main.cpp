@@ -67,7 +67,7 @@ void loop()
           // Messages
           if (botSettings.NOTIFICATIONS)
           {
-            TelegramBOT bot = TelegramBOT(botSettings.INPUT_ID.c_str(), botSettings.INPUT_API_KEY.c_str(), botSettings.INPUT_SSID.c_str(), botSettings.INPUT_PASSWORD.c_str());
+            TelegramBOT bot = TelegramBOT(botSettings.INPUT_ID.c_str(), botSettings.INPUT_API_KEY.c_str(), botCredentials.INPUT_SSID.c_str(), botCredentials.INPUT_PASSWORD.c_str());
             delay(1000);
             
             bot.begin("Door is Open: !!!");
